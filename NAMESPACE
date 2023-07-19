@@ -1,0 +1,3 @@
+importFrom("ibd","design_to_N")
+importFrom("MASS","ginv")
+export("bslr","pbslr","bslr.odd","bslr.even","pbslr.odd","pbslr.even")
