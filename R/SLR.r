@@ -7,7 +7,7 @@ bslr = function(v, k)
 	if(v%%2 == 0) {
   		if(v > 2) bslr.even(v, k) else stop("v should be greater than 2")
   	} else {
-  		 if(v >= 3) bslr.odd(v, k) else stop("v should be greater than 2")
+  		 if(v > 2) bslr.odd(v, k) else stop("v should be greater than 2")
   	}
 }
 
@@ -44,66 +44,87 @@ bslr.gen = function(v,k)
     }
   }
   # design
-  if(k==2) {
-    SLR<-matrix(NA,v,2*p)
-    for (l in 1:p) {
-      for (q in 2:v) {
-        SLR[1,(2*l-1):(2*l)]<-design[l, ]
-        SLR[q, ]<-(SLR[q-1, ])%%v +1
+  if(FALSE) {
+    if(k==2) {
+      SLR<-matrix(NA,v,2*p)
+      for (l in 1:p) {
+        for (q in 2:v) {
+          SLR[1,(2*l-1):(2*l)]<-design[l, ]
+          SLR[q, ]<-(SLR[q-1, ])%%v +1
+        }
       }
-    }
-  } else if(k==3) {
-    SLR<-matrix(NA,v,3*p)
-    for (l in 1:p) {
-      for (q in 2:v) {
-        SLR[1,(3*l-2):(3*l)]<-design[l, ]
-        SLR[q, ]<-(SLR[q-1, ])%%v +1
+    } else if(k==3) {
+      SLR<-matrix(NA,v,3*p)
+      for (l in 1:p) {
+        for (q in 2:v) {
+          SLR[1,(3*l-2):(3*l)]<-design[l, ]
+          SLR[q, ]<-(SLR[q-1, ])%%v +1
+        }
       }
-    }
-  } else if(k==4) {
-    SLR<-matrix(NA,v,4*p)
-    for (l in 1:p) {
-      for (q in 2:v) {
-        SLR[1,(4*l-3):(4*l)]<-design[l, ]
-        SLR[q, ]<-(SLR[q-1, ])%%v +1
+    } else if(k==4) {
+      SLR<-matrix(NA,v,4*p)
+      for (l in 1:p) {
+        for (q in 2:v) {
+          SLR[1,(4*l-3):(4*l)]<-design[l, ]
+          SLR[q, ]<-(SLR[q-1, ])%%v +1
+        }
       }
-    }
-  } else if(k==5) {
-    SLR<-matrix(NA,v,5*p)
-    for (l in 1:p) {
-      for (q in 2:v) {
-        SLR[1,(5*l-4):(5*l)]<-design[l, ]
-        SLR[q, ]<-(SLR[q-1, ])%%v +1
+    } else if(k==5) {
+      SLR<-matrix(NA,v,5*p)
+      for (l in 1:p) {
+        for (q in 2:v) {
+          SLR[1,(5*l-4):(5*l)]<-design[l, ]
+          SLR[q, ]<-(SLR[q-1, ])%%v +1
+        }
       }
+    } else {
+      # Handle other cases if needed
+      print("Unsupported value for k")
     }
-  } else {
-    # Handle other cases if needed
-    print("Unsupported value for k")
+  }
+  
+  SLR<-matrix(NA,v,k*p)
+  for (l in 1:p) {
+    for (q in 2:v) {
+      SLR[1,((k*l-(k-1)):(k*l))]<-design[l, ]
+      SLR[q, ]<-(SLR[q-1, ])%%v +1
+    }
   }
   # SLR          
-  if (k == 2) {
-    SLR_1 <- matrix(NA, v, p)
-    for (z in 1:p) {
-      SLR_1[, z] <- paste(SLR[, 2 * z - 1], SLR[, 2 * z], sep = ",")
+  if(FALSE) {
+    if (k == 2) {
+      SLR_1 <- matrix(NA, v, p)
+      for (z in 1:p) {
+        SLR_1[, z] <- paste(SLR[, 2 * z - 1], SLR[, 2 * z], sep = ",")
+      }
+    } else if (k == 3) {
+      SLR_1 <- matrix(NA, v, p)
+      for (z in 1:p) {
+        SLR_1[, z] <- paste(SLR[, 3 * z - 2], SLR[, 3 * z - 1], SLR[, 3 * z], sep = ",")
+      }
+    } else if (k == 4) {
+      SLR_1 <- matrix(NA, v, p)
+      for (z in 1:p) {
+        SLR_1[, z] <- paste(SLR[, 4 * z - 3], SLR[, 4 * z - 2], SLR[, 4 * z - 1], SLR[, 4 * z], sep = ",")
+      }
+    } else if (k == 5) {
+      SLR_1 <- matrix(NA, v, p)
+      for (z in 1:p) {
+        SLR_1[, z] <- paste(SLR[, 5 * z - 4], SLR[, 5 * z - 3], SLR[, 5 * z - 2], SLR[, 5 * z - 1], SLR[, 5 * z], sep = ",")
+      }
+    } else {
+      # Handle other cases if needed
+      print("Unsupported value for k")
     }
-  } else if (k == 3) {
-    SLR_1 <- matrix(NA, v, p)
-    for (z in 1:p) {
-      SLR_1[, z] <- paste(SLR[, 3 * z - 2], SLR[, 3 * z - 1], SLR[, 3 * z], sep = ",")
+  }
+  
+  SLR_1 <- matrix("", v, p)
+  for(i in 1:v) {
+    for(j in 1:p) {
+      for(l in 1:k) {
+        if(l == 1) SLR_1[i,j] = paste0(SLR_1[i,j], SLR[i,((j-1)*k+l)]) else SLR_1[i,j] = paste(SLR_1[i,j], SLR[i,((j-1)*k+l)], sep = ",")
+      }
     }
-  } else if (k == 4) {
-    SLR_1 <- matrix(NA, v, p)
-    for (z in 1:p) {
-      SLR_1[, z] <- paste(SLR[, 4 * z - 3], SLR[, 4 * z - 2], SLR[, 4 * z - 1], SLR[, 4 * z], sep = ",")
-    }
-  } else if (k == 5) {
-    SLR_1 <- matrix(NA, v, p)
-    for (z in 1:p) {
-      SLR_1[, z] <- paste(SLR[, 5 * z - 4], SLR[, 5 * z - 3], SLR[, 5 * z - 2], SLR[, 5 * z - 1], SLR[, 5 * z], sep = ",")
-    }
-  } else {
-    # Handle other cases if needed
-    print("Unsupported value for k")
   }
   # noquote(SLR_1)
   vect<-c(t(SLR))
@@ -680,4 +701,6 @@ pbslr.odd = function(v, k)
   }
   return(output)
 }
+
+bslr(7,4)
 
